@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">GPS_DEMO</string>
+    <string name="title_home">Add School</string>
+    <string name="title_dashboard">Show on Map</string>
+    <string name="title_notifications">Notifications</string>
+
+    <string name="add_title">Add School Info</string>
+    <string name="name_of_school">Name of School</string>
+    <string name="address">Address</string>
+    <string name="lat">Latitude</string>
+    <string name="lng">Longitude</string>
+    <string name="save">Save</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

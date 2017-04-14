@@ -1,0 +1,100 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.sazal.siddiqui.gps_demo.AddFragment">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/titleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/add_title"
+            android:textSize="@dimen/text_20sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/nameTextInputLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/titleTextView">
+            <EditText
+                android:id="@+id/nameEditText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/name_of_school"
+                android:inputType="textPersonName"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/addressTextInputLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/nameTextInputLayout">
+            <EditText
+                android:id="@+id/addressEditText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/address"
+                android:inputType="textPostalAddress"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/latTextInputLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/lngTextInputLayout"
+            app:layout_constraintTop_toBottomOf="@+id/addressTextInputLayout">
+            <EditText
+                android:id="@+id/latEditText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/lat"
+                android:inputType="numberSigned"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/lngTextInputLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintLeft_toRightOf="@+id/latTextInputLayout"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/addressTextInputLayout">
+            <EditText
+                android:id="@+id/lngEditText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/lng"
+                android:inputType="numberSigned"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/saveAppCompatButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/save"
+            android:textSize="@dimen/text_20sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/latTextInputLayout"/>
+
+    </android.support.constraint.ConstraintLayout>
+</ScrollView>
