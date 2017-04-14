@@ -37,6 +37,9 @@ public class AddFragment extends Fragment {
     @BindView(R.id.saveAppCompatButton) AppCompatButton ms_SaveAppCompatButton;
     Unbinder unbinder;
 
+    private String name, address;
+    private double lat, lng;
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -110,6 +113,52 @@ public class AddFragment extends Fragment {
 
     @OnClick(R.id.saveAppCompatButton)
     public void onViewClicked() {
+        getDate();
+    }
+
+    private void getDate() {
+        name = ms_NameEditText.getText().toString().trim();
+        address = ms_AddressEditText.getText().toString().trim();
+
+        try {
+            lat = Double.parseDouble(ms_LatEditText.getText().toString().trim());
+            lng = Double.parseDouble(ms_LngEditText.getText().toString().trim());
+        }catch (NumberFormatException e){
+            e.printStackTrace();
+        }
+
+        saveData();
+    }
+
+    private void saveData() {
+        if (!validate()) return;
+    }
+
+    private boolean validate() {
+        boolean valid = true;
+
+        if (name.isEmpty()){
+            ms_NameEditText.setError(getString(R.string.error_required));
+            valid = false;
+        }else ms_NameEditText.setError(null);
+
+        if (address.isEmpty()){
+            ms_AddressEditText.setError(getString(R.string.error_required));
+            valid = false;
+        }else ms_AddressEditText.setError(null);
+
+        if (String.valueOf(lng).isEmpty()){
+            ms_LngEditText.setError(getString(R.string.error_required));
+            valid = false;
+        }else ms_LngEditText.setError(getString(R.string.error_required));
+
+        if (String.valueOf(lat).isEmpty()){
+            ms_LatEditText.setError(getString(R.string.error_required));
+            valid = false;
+        }else ms_LatEditText.setError(getString(R.string.error_required));
+
+
+        return valid;
     }
 
     /**
