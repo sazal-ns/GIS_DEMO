@@ -1,0 +1,86 @@
+{
+  "project_info": {
+    "project_number": "70918305172",
+    "firebase_url": "https://gis-demo-d60bd.firebaseio.com",
+    "project_id": "gis-demo-d60bd",
+    "storage_bucket": "gis-demo-d60bd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:70918305172:android:dfcb3fff50fccbcd",
+        "android_client_info": {
+          "package_name": "com.sazal.siddiqui.gps_demo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "70918305172-2nifv1rod761vhr885mij8fpb9mg3gd7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRUhEy904DFkJM71iEUnUkDv3xTieUsV4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:70918305172:android:895e524b6f695ce0",
+        "android_client_info": {
+          "package_name": "com.sazal.siddiqui.gisdemo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "70918305172-g7m75j1kgomec88s93ouppl7l1kjfnn1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sazal.siddiqui.gisdemo",
+            "certificate_hash": "cdadb0e25ede341520744c93db3d51fa92505829"
+          }
+        },
+        {
+          "client_id": "70918305172-2nifv1rod761vhr885mij8fpb9mg3gd7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRUhEy904DFkJM71iEUnUkDv3xTieUsV4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "70918305172-2nifv1rod761vhr885mij8fpb9mg3gd7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

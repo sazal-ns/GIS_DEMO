@@ -1,4 +1,4 @@
-package com.sazal.siddiqui.gps_demo;
+package com.sazal.siddiqui.gisdemo;
 
 import org.junit.Test;
 

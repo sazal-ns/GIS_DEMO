@@ -1,4 +1,4 @@
-package com.sazal.siddiqui.gps_demo;
+package com.sazal.siddiqui.gisdemo;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.sazal.siddiqui.gps_demo", appContext.getPackageName());
+        assertEquals("com.sazal.siddiqui.gisdemo", appContext.getPackageName());
     }
 }

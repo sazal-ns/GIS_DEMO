@@ -4,8 +4,8 @@ android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
-        applicationId "com.sazal.siddiqui.gps_demo"
-        minSdkVersion 19
+        applicationId "com.sazal.siddiqui.gisdemo"
+        minSdkVersion 18
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -30,7 +30,14 @@ dependencies {
     compile 'com.android.support:support-vector-drawable:25.3.1'
     compile 'com.jakewharton:butterknife-compiler:8.5.1'
     compile 'com.android.support:support-v4:25.3.1'
-    testCompile 'junit:junit:4.12'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.jakewharton:butterknife:8.5.1'
+    compile 'com.google.android.gms:play-services-maps:10.0.1'
+    compile 'com.google.android.gms:play-services-location:10.0.1'
+    testCompile 'junit:junit:4.12'
 }
+
+
+
+
+apply plugin: 'com.google.gms.google-services'

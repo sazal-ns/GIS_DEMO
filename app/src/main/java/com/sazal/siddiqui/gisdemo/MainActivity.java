@@ -1,4 +1,4 @@
-package com.sazal.siddiqui.gps_demo;
+package com.sazal.siddiqui.gisdemo;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -24,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
                     fragmentTransaction.replace(R.id.content, new AddFragment()).commit();
                     return true;
                 case R.id.navigation_dashboard:
+                    fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.content, new MapFragment()).commit();
                     return true;
             }
             return false;

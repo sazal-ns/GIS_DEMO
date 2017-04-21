@@ -1,4 +1,4 @@
-package com.sazal.siddiqui.gps_demo;
+package com.sazal.siddiqui.gisdemo;
 
 import android.content.Context;
 import android.net.Uri;
@@ -38,7 +38,7 @@ public class AddFragment extends Fragment {
     Unbinder unbinder;
 
     private String name, address;
-    private double lat, lng;
+    private double lat, lng, gpsLat, gpsLng;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -75,6 +75,8 @@ public class AddFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+
     }
 
     @Override
@@ -132,6 +134,8 @@ public class AddFragment extends Fragment {
 
     private void saveData() {
         if (!validate()) return;
+
+
     }
 
     private boolean validate() {

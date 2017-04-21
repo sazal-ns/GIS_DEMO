@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.sazal.siddiqui.gps_demo.AddFragment">
+    tools:context="com.sazal.siddiqui.gisdemo.AddFragment">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
