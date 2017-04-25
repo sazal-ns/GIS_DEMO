@@ -38,13 +38,18 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.sazal.siddiqui.gisdemo.DBHelper.DBHelper;
+import com.sazal.siddiqui.gisdemo.Model.Package;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -96,6 +101,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
     private LocationRequest mLocationRequest;
     private Location tempLocation;
     private DecimalFormat format;
+
+    private Package aPackage;
+    private List<Package> packages;
 
     public MapFragment() {
         // Required empty public constructor
@@ -381,6 +389,26 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
         CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(17).build();
 
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+        aPackage = new Package();
+        packages = new DBHelper(getContext()).getAllPackage();
+
+        for (int i = 0; i < packages.size(); i++){
+
+            aPackage = packages.get(i);
+
+
+
+            MarkerOptions marker = new MarkerOptions().position(new LatLng(aPackage.getLat(), aPackage.getLng()))
+                    .title(aPackage.getName()).snippet(aPackage.getAddress());
+
+            marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+
+            mMap.addMarker(marker);
+
+        }
+
+
         //mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         //new DialogShow(getContext(), "Lacation", latLng.toString(), null);
     }

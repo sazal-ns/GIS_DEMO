@@ -1,14 +1,29 @@
 package com.sazal.siddiqui.gisdemo;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationServices;
+import com.sazal.siddiqui.gisdemo.DBHelper.DBHelper;
+import com.sazal.siddiqui.gisdemo.Model.Package;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,26 +39,26 @@ import butterknife.Unbinder;
  * Use the {@link AddFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AddFragment extends Fragment {
+public class AddFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, LocationListener, GoogleApiClient.OnConnectionFailedListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    private static final int LOCATION_PERMISSION_CONSTANT = 100;
+    private static final int REQUEST_PERMISSION_SETTING = 101;
     @BindView(R.id.nameEditText) EditText ms_NameEditText;
     @BindView(R.id.addressEditText) EditText ms_AddressEditText;
     @BindView(R.id.latEditText) EditText ms_LatEditText;
     @BindView(R.id.lngEditText) EditText ms_LngEditText;
     @BindView(R.id.saveAppCompatButton) AppCompatButton ms_SaveAppCompatButton;
     Unbinder unbinder;
-
     private String name, address;
     private double lat, lng, gpsLat, gpsLng;
-
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+    private Location location;
+    private GoogleApiClient googleApiClient;
     private OnFragmentInteractionListener mListener;
 
     public AddFragment() {
@@ -85,15 +100,26 @@ public class AddFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_add, container, false);
         unbinder = ButterKnife.bind(this, view);
+        buildGoogleApiClient();
         return view;
     }
 
+    protected synchronized void buildGoogleApiClient() {
+        // 5
+        googleApiClient = new GoogleApiClient.Builder(getContext())
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+    }
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
     }
+
+
 
     @Override
     public void onAttach(Context context) {
@@ -102,8 +128,23 @@ public class AddFragment extends Fragment {
     }
 
     @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        googleApiClient.connect();
+    }
+
+    @Override
+    public void onStop() {
+        if (googleApiClient.isConnected()) {
+            googleApiClient.disconnect();
+        }
+        super.onStop();
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
+        googleApiClient.disconnect();
         mListener = null;
     }
 
@@ -135,7 +176,23 @@ public class AddFragment extends Fragment {
     private void saveData() {
         if (!validate()) return;
 
+        Package aPackage = new Package();
+        aPackage.setName(name);
+        aPackage.setLat(lat);
+        aPackage.setLng(lng);
+        aPackage.setAddress(address);
 
+        DBHelper dbHelper = new DBHelper(getContext());
+        long l = dbHelper.insertPackage(aPackage);
+
+        if (l!=-1) new MaterialDialog.Builder(getContext())
+                .title("Result")
+                .content("Data Save")
+                .show();
+        else new MaterialDialog.Builder(getContext())
+                .title("Result")
+                .content("Error On Data Save")
+                .show();
     }
 
     private boolean validate() {
@@ -154,15 +211,69 @@ public class AddFragment extends Fragment {
         if (String.valueOf(lng).isEmpty()){
             ms_LngEditText.setError(getString(R.string.error_required));
             valid = false;
-        }else ms_LngEditText.setError(getString(R.string.error_required));
+        }else ms_LngEditText.setError(null);
 
         if (String.valueOf(lat).isEmpty()){
             ms_LatEditText.setError(getString(R.string.error_required));
             valid = false;
-        }else ms_LatEditText.setError(getString(R.string.error_required));
+        }else ms_LatEditText.setError(null);
 
 
         return valid;
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        if (location == null) {
+
+            location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+
+            if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Need to access Location Permission");
+                builder.setMessage("To search cleaner nearest you location, this app needs call phone permission.");
+                builder.setPositiveButton("Grant", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                        ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION},
+                                LOCATION_PERMISSION_CONSTANT);
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                builder.show();
+            }else {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION},
+                        LOCATION_PERMISSION_CONSTANT);
+            }
+
+            lat = location.getLatitude();
+            lng = location.getLongitude();
+
+            ms_LatEditText.setText(String.valueOf(lat));
+            ms_LngEditText.setText(String.valueOf(lng));
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        googleApiClient.connect();
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
     }
 
     /**
