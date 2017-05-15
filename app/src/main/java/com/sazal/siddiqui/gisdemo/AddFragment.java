@@ -1,7 +1,11 @@
 package com.sazal.siddiqui.gisdemo;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
@@ -16,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.common.ConnectionResult;
@@ -40,6 +45,7 @@ import butterknife.Unbinder;
  * create an instance of this fragment.
  */
 public class AddFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, LocationListener, GoogleApiClient.OnConnectionFailedListener {
+    protected static final int REQUEST_CHECK_SETTINGS = 0x1;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -60,6 +66,8 @@ public class AddFragment extends Fragment implements GoogleApiClient.ConnectionC
     private Location location;
     private GoogleApiClient googleApiClient;
     private OnFragmentInteractionListener mListener;
+
+    private SharedPreferences permissionStatus;
 
     public AddFragment() {
         // Required empty public constructor
@@ -101,6 +109,7 @@ public class AddFragment extends Fragment implements GoogleApiClient.ConnectionC
         View view = inflater.inflate(R.layout.fragment_add, container, false);
         unbinder = ButterKnife.bind(this, view);
         buildGoogleApiClient();
+        permissionStatus = getActivity().getSharedPreferences("permissionStatuss", Context.MODE_PRIVATE);
         return view;
     }
 
@@ -249,16 +258,85 @@ public class AddFragment extends Fragment implements GoogleApiClient.ConnectionC
                 });
                 builder.show();
             }else {
-                ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION},
-                        LOCATION_PERMISSION_CONSTANT);
+                loc();
             }
 
-            lat = location.getLatitude();
-            lng = location.getLongitude();
+            SharedPreferences.Editor editor = permissionStatus.edit();
+            editor.putBoolean(Manifest.permission.ACCESS_COARSE_LOCATION,true);
+            editor.apply();
+        }else loc();
+    }
 
-            ms_LatEditText.setText(String.valueOf(lat));
-            ms_LngEditText.setText(String.valueOf(lng));
+    private void loc() {
+        lat = location.getLatitude();
+        lng = location.getLongitude();
+
+        ms_LatEditText.setText(String.valueOf(lat));
+        ms_LngEditText.setText(String.valueOf(lng));
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_PERMISSION_SETTING) {
+            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                loc();
+            }
         }
+
+        switch (requestCode) {
+            // Check for the integer request code originally supplied to startResolutionForResult().
+            case REQUEST_CHECK_SETTINGS:
+                switch (resultCode) {
+                    case Activity.RESULT_OK:
+
+                        loc();
+                        break;
+                    case Activity.RESULT_CANCELED:
+
+                        break;
+                }
+                break;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == LOCATION_PERMISSION_CONSTANT){
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                loc();
+            }else {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION)){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle("Need to access Location Permission");
+                    builder.setMessage("To search cleaner nearest you location, this app needs call phone permission.");
+                    builder.setPositiveButton("Grant", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+
+                            ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION},
+                                    LOCATION_PERMISSION_CONSTANT);
+
+                        }
+                    });
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+                    builder.show();
+                }else Toast.makeText(getContext(), "Sorry", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     @Override

@@ -11,7 +11,6 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -290,32 +289,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
                     }
                 });
                 builder.show();
-            }else if (permissionStatus.getBoolean(Manifest.permission.ACCESS_COARSE_LOCATION,false)){
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("Need to access Location Permission");
-                builder.setMessage("To search cleaner nearest you location, this app needs call phone permission.");
-                builder.setPositiveButton("Grant", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                        sentToSettings = true;
-                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                        Uri uri = Uri.fromParts("package", getActivity().getPackageName(), null);
-                        intent.setData(uri);
-                        startActivityForResult(intent, REQUEST_PERMISSION_SETTING);
-                        Toast.makeText(getActivity().getBaseContext(), "Go to Permissions to Grant Storage", Toast.LENGTH_LONG).show();
-                    }
-                });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-                builder.show();
             }else {
-                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
-                        LOCATION_PERMISSION_CONSTANT);
+                loc();
             }
             SharedPreferences.Editor editor = permissionStatus.edit();
             editor.putBoolean(Manifest.permission.ACCESS_COARSE_LOCATION,true);
